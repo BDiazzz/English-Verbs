@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Tarjetas de verbos irregulares</title>
+<title>Tarjetas de verbos en inglés</title>
 <style>
 :root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#f6f4ef;--fg:#1f2430;--muted:#667085;--card:#fff;--border:#ddd8cc;--accent:#2f6fed;--ok:#1c8a4d;--bad:#c93c3c;color-scheme:light}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#15171c;--fg:#eceef2;--muted:#9aa1ad;--card:#1f232b;--border:#343a46;--accent:#6b9bff;--ok:#2a9d5f;--bad:#d95050;color-scheme:dark}}
@@ -20,6 +20,9 @@ select{flex:1;min-width:0;padding:10px;border-radius:10px;border:1px solid var(-
 button{font:inherit;cursor:pointer}
 .small{padding:10px 14px;border-radius:10px;border:1px solid var(--border);background:var(--card);color:var(--fg);font-size:.93rem;white-space:nowrap}
 .small:hover{border-color:var(--accent)}
+.seg{display:flex;gap:6px}
+.seg button{flex:1;padding:9px;border-radius:10px;border:1px solid var(--border);background:var(--card);color:var(--fg);font-size:.9rem}
+.seg button.on{background:var(--accent);border-color:var(--accent);color:#fff}
 .stats{display:flex;justify-content:space-between;color:var(--muted);font-size:.9rem;margin-bottom:6px}
 .progress{height:8px;border-radius:99px;background:var(--border);overflow:hidden;margin-bottom:18px}
 .progress i{display:block;height:100%;width:0;background:var(--ok);transition:width .3s}
@@ -58,10 +61,11 @@ button{font:inherit;cursor:pointer}
 </head>
 <body>
 <main>
-<h1>Verbos irregulares</h1>
+<h1>Verbos en inglés</h1>
 <p class="sub">Toca la tarjeta para voltearla y pulsa 🔊 para oír la pronunciación. Si aciertas, sale del mazo; si fallas, vuelve al final.</p>
 
 <div class="controls">
+<div class="seg" id="seg"><button data-t="irr" class="on">Irregulares</button><button data-t="reg">Regulares</button><button data-t="all">Todos</button></div>
 <div class="bar">
 <select id="lvl" aria-label="Nivel">
 <option value="core">Esenciales (uso diario / B1)</option>
@@ -120,7 +124,7 @@ button{font:inherit;cursor:pointer}
 <button id="again">Volver a empezar</button>
 </div>
 
-<p class="legend"><b>Guía rápida:</b> Usa 🔊 para oír la pronunciación real en inglés (US). En la guía escrita: <b>j</b> = h aspirada · <b>u</b> (antes de vocal) = w · <b>th</b> = lengua entre dientes · <b>ae</b> = mezcla de a-e · <b>er</b> = r suave inglesa · el acento (´) marca la sílaba fuerte.</p>
+<p class="legend"><b>Guía rápida:</b> Usa 🔊 para oír la pronunciación real en inglés (US). En la guía escrita: <b>j</b> = h aspirada · <b>u</b> (antes de vocal) = w · <b>th</b> = lengua entre dientes · <b>ae</b> = mezcla de a-e · <b>er</b> = r suave inglesa · el acento (´) marca la sílaba fuerte. Regulares: <b>-ed</b> suena /t/, /d/ o /id/ según el último sonido del verbo.</p>
 </main>
 
 <script>
@@ -194,7 +198,7 @@ const F=[
 "releer|reread~riríd|reread~riréd||;"+
 "revender|resell~risél|resold~risóuld||;"+
 "reenviar / volver a mandar|resend~risénd|resent~risént||;"+
-"decir|say~sei|said~sed||1;"+
+"decir (palabras)|say~sei|said~sed||1;"+
 "vender|sell~sel|sold~sould||1;"+
 "enviar|send~send|sent~sent||1;"+
 "dormir|sleep~slip|slept~slept||1;"+
@@ -221,9 +225,9 @@ const F=[
 "pensar|think~think|thought~thot||1"
 ],
 ["4. Patrón vocálico i – a – u",
-"empezar|begin~bigín|began~bigáen|begun~bigán|1;"+
+"empezar / comenzar|begin~bigín|began~bigáen|begun~bigán|1;"+
 "beber|drink~drink|drank~draenk|drunk~drank|1;"+
-"sonar / llamar|ring~ring|rang~raeng|rung~rang|1;"+
+"sonar / llamar (timbre, teléfono)|ring~ring|rang~raeng|rung~rang|1;"+
 "encogerse|shrink~shrink|shrank~shraenk|shrunk~shrank|;"+
 "cantar|sing~sing|sang~saeng|sung~sang|1;"+
 "hundirse|sink~sink|sank~saenk|sunk~sank|1;"+
@@ -242,7 +246,7 @@ const F=[
 "dibujar / extraer|draw~dro|drew~dru|drawn~dron|1;"+
 "conducir / manejar|drive~draiv|drove~drouv|driven~drivn|1;"+
 "comer|eat~it|ate~eit|eaten~itn|1;"+
-"caer|fall~fol|fell~fel|fallen~folen|1;"+
+"caer|fall~fol|fell~fel|fallen~fólen|1;"+
 "volar|fly~flai|flew~flu|flown~floun|1;"+
 "prohibir|forbid~forbíd|forbade~forbáed|forbidden~forbídn|;"+
 "olvidar|forget~forguét|forgot~forgót|forgotten~forgótn|1;"+
@@ -269,7 +273,7 @@ const F=[
 "esquilar / recortar|shear~shir|sheared~shird|shorn / sheared~shorn / shird|;"+
 "mostrar|show~shou|showed~shoud|shown~shoun|1;"+
 "sembrar|sow~sou|sowed~soud|sown / sowed~soun / soud|;"+
-"hablar|speak~spik|spoke~spouk|spoken~spoukn|1;"+
+"hablar (un idioma / dar un discurso)|speak~spik|spoke~spouk|spoken~spoukn|1;"+
 "robar|steal~stil|stole~stoul|stolen~stouln|1;"+
 "dar zancadas|stride~straid|strode~stroud|stridden~stridn|;"+
 "hincharse|swell~suel|swelled~sueld|swollen~suólen|;"+
@@ -316,22 +320,188 @@ const F=[
 ["7. Esenciales muy irregulares",
 "ser / estar|be~bi|was / were~uaz / uer|been~bin|1;"+
 "soportar / dar a luz|bear~ber|bore~bor|borne / born~born|1;"+
-"hacer|do~du|did~did|done~dan|1;"+
+"hacer (una acción / tarea)|do~du|did~did|done~dan|1;"+
 "obtener / conseguir|get~guet|got~got|gotten / got~gotn / got|1;"+
 "ir|go~gou|went~uent|gone~gon|1;"+
 "tener / haber|have~jaev|had~jaed||1;"+
 "acostarse / yacer (no 'mentir')|lie~lai|lay~lei|lain~lein|1;"+
-"hacer / fabricar|make~meik|made~meid||1;"+
+"hacer / fabricar (crear algo)|make~meik|made~meid||1;"+
 "rehacer|redo~ridú|redid~ridíd|redone~ridán|1;"+
 "jurar / decir groserías|swear~suer|swore~suor|sworn~suorn|1;"+
 "rasgar / romper (papel / tela)|tear~ter|tore~tor|torn~torn|1;"+
 "someterse a / pasar por|undergo~andergóu|underwent~anderuént|undergone~andergón|1;"+
 "deshacer|undo~andú|undid~andíd|undone~andán|1;"+
 "llevar puesto / usar|wear~uer|wore~uor|worn~uorn|1"
-]
+],
+["R1. -ed suena /t/",
+"trabajar|work~uerk|worked~uerkt||1;"+
+"ayudar|help~jelp|helped~jelpt||1;"+
+"preguntar|ask~aesk|asked~aeskt||1;"+
+"caminar|walk~uok|walked~uokt||1;"+
+"mirar (ver TV, un partido)|watch~uach|watched~uacht||1;"+
+"mirar (dirigir la vista)|look~luk|looked~lukt||1;"+
+"hablar / conversar (con alguien)|talk~tok|talked~tokt||1;"+
+"gustar / querer|like~laik|liked~laikt||1;"+
+"esperar (con ilusión)|hope~joup|hoped~joupt||1;"+
+"saltar|jump~yamp|jumped~yampt||;"+
+"cocinar|cook~kuk|cooked~kukt||1;"+
+"reír|laugh~laef|laughed~laeft||;"+
+"lavar|wash~uash|washed~uasht||1;"+
+"arreglar|fix~fiks|fixed~fikst||1;"+
+"terminar|finish~fínish|finished~fínisht||1;"+
+"empujar|push~push|pushed~pusht||;"+
+"extrañar / perder (tren)|miss~mis|missed~mist||1;"+
+"bailar|dance~daens|danced~daenst||;"+
+"revisar / comprobar|check~chek|checked~chekt||1;"+
+"patear|kick~kik|kicked~kikt||;"+
+"tocar a la puerta / golpear|knock~nak|knocked~nakt||;"+
+"recoger / elegir|pick~pik|picked~pikt||1;"+
+"pasar (por / a alguien)|pass~paes|passed~paest||1;"+
+"tocar (con la mano)|touch~tach|touched~tacht||;"+
+"desear|wish~uish|wished~uisht||1;"+
+"agradecer|thank~thaenk|thanked~thaenkt||1;"+
+"mezclar|mix~miks|mixed~mikst||;"+
+"hablar de / debatir (un tema)|discuss~diskás|discussed~diskást||;"+
+"practicar|practice~práektis|practiced~práektist||1;"+
+"relajarse|relax~riláeks|relaxed~riláekst||;"+
+"prometer|promise~prómis|promised~prómist||1;"+
+"presentar (a alguien) / introducir (algo nuevo)|introduce~introdús|introduced~introdúst||"
+,"reg"],
+["R2. -ed suena /d/",
+"jugar / tocar (instrumento)|play~plei|played~pleid||1;"+
+"llamar (por teléfono / a alguien)|call~kol|called~kold||1;"+
+"limpiar|clean~klin|cleaned~klind||1;"+
+"abrir|open~óupen|opened~óupend||1;"+
+"escuchar|listen~lísen|listened~lísend||1;"+
+"disfrutar|enjoy~enyói|enjoyed~enyóid||;"+
+"contestar / responder|answer~áenser|answered~áenserd||1;"+
+"llover|rain~rein|rained~reind||;"+
+"vivir|live~liv|lived~livd||1;"+
+"amar / encantar|love~lav|loved~lavd||1;"+
+"usar|use~yuz|used~yuzd||1;"+
+"llegar|arrive~eráiv|arrived~eráivd||1;"+
+"cambiar|change~cheinch|changed~cheinchd||1;"+
+"mover(se)|move~muv|moved~muvd||1;"+
+"cerrar|close~klouz|closed~klouzd||1;"+
+"recordar|remember~rimémber|remembered~rimémberd||1;"+
+"girar / doblar|turn~tern|turned~ternd||1;"+
+"quedarse|stay~stei|stayed~steid||1;"+
+"seguir|follow~fólou|followed~fóloud||1;"+
+"ocurrir / pasar|happen~jáepen|happened~jáepend||1;"+
+"creer|believe~bilív|believed~bilívd||1;"+
+"explicar|explain~ekspléin|explained~ekspléind||1;"+
+"mejorar|improve~imprúv|improved~imprúvd||1;"+
+"permitir|allow~aláu|allowed~aláud||1;"+
+"ofrecer|offer~ófer|offered~óferd||1;"+
+"pedir (comida) / ordenar|order~órder|ordered~órderd||1;"+
+"compartir|share~sher|shared~sherd||1;"+
+"guardar / ahorrar|save~seiv|saved~seivd||1;"+
+"viajar|travel~tráevel|traveled~tráeveld||1;"+
+"descubrir|discover~diskáver|discovered~diskáverd||;"+
+"lograr / administrar|manage~máenich|managed~máenichd||1;"+
+"quitar / eliminar|remove~rimúv|removed~rimúvd||;"+
+"regresar / devolver|return~ritérn|returned~ritérnd||1;"+
+"servir|serve~serv|served~servd||;"+
+"unirse / unir|join~yoin|joined~yoind||;"+
+"sonreír|smile~smail|smiled~smaild||;"+
+"preguntarse|wonder~uónder|wondered~uónderd||;"+
+"pedir prestado|borrow~bórou|borrowed~bóroud||1;"+
+"estar de acuerdo|agree~agrí|agreed~agríd||1;"+
+"recibir|receive~risív|received~risívd||1;"+
+"darse cuenta (no 'realizar')|realize~ríalaiz|realized~ríalaizd||1;"+
+"preparar|prepare~pripér|prepared~pripérd||;"+
+"describir|describe~diskráib|described~diskráibd||;"+
+"imaginar|imagine~imáyin|imagined~imáyind||;"+
+"causar|cause~koz|caused~kozd||;"+
+"considerar|consider~konsíder|considered~konsíderd||;"+
+"morir|die~dai|died~daid||1;"+
+"matar|kill~kil|killed~kild||"
+,"reg"],
+["R3. -ed suena /id/",
+"querer|want~uant|wanted~uántid||1;"+
+"necesitar|need~nid|needed~nídid||1;"+
+"empezar / poner en marcha|start~start|started~stártid||1;"+
+"esperar (aguardar)|wait~ueit|waited~uéitid||1;"+
+"visitar|visit~vísit|visited~vísitid||1;"+
+"decidir|decide~disáid|decided~disáidid||1;"+
+"añadir / sumar|add~aed|added~áedid||;"+
+"terminar / acabar|end~end|ended~éndid||;"+
+"odiar|hate~jeit|hated~jéitid||;"+
+"invitar|invite~inváit|invited~inváitid||;"+
+"crear|create~criéit|created~criéitid||;"+
+"plantar|plant~plaent|planted~pláentid||;"+
+"pintar|paint~peint|painted~péintid||;"+
+"descansar|rest~rest|rested~réstid||;"+
+"contar (números) / importar|count~kaunt|counted~káuntid||;"+
+"esperar (algo)|expect~ekspékt|expected~ekspéktid||;"+
+"afectar|affect~efékt|affected~eféktid||;"+
+"conectar|connect~konékt|connected~konéktid||1;"+
+"depender|depend~dipénd|depended~dipéndid||1;"+
+"existir|exist~egzíst|existed~egzístid||;"+
+"insistir|insist~insíst|insisted~insístid||;"+
+"sugerir|suggest~sagyést|suggested~sagyéstid||1;"+
+"gritar|shout~shaut|shouted~shaútid||;"+
+"alquilar|rent~rent|rented~réntid||1;"+
+"confiar|trust~trast|trusted~trástid||1;"+
+"proporcionar / ofrecer|provide~prováid|provided~prováidid||1;"+
+"incluir|include~inklúd|included~inklúdid||1;"+
+"recomendar|recommend~rekoménd|recommended~rekoméndid||1;"+
+"aceptar|accept~aksépt|accepted~akséptid||1;"+
+"proteger|protect~protékt|protected~protéktid||;"+
+"informar / reportar|report~ripórt|reported~ripórtid||;"+
+"asistir a (evento / clase, no 'ayudar')|attend~aténd|attended~aténdid||1;"+
+"evitar|avoid~avóid|avoided~avóidid||1;"+
+"tratar (a alguien)|treat~trit|treated~trítid||;"+
+"desperdiciar|waste~ueist|wasted~uéistid||"
+,"reg"],
+["R4. Duplican la consonante",
+"parar|stop~stap|stopped~stapt||1;"+
+"planear|plan~plaen|planned~plaend||1;"+
+"dejar caer / soltar|drop~drap|dropped~drapt||;"+
+"ir de compras|shop~shap|shopped~shapt||1;"+
+"chatear / charlar|chat~chaet|chatted~cháetid||;"+
+"admitir|admit~admít|admitted~admítid||;"+
+"preferir|prefer~prifér|preferred~priférd||1;"+
+"agarrar|grab~graeb|grabbed~graebd||;"+
+"resbalar|slip~slip|slipped~slipt||;"+
+"trotar|jog~yag|jogged~yagd||;"+
+"rogar / mendigar|beg~beg|begged~begd||;"+
+"frotar|rub~rab|rubbed~rabd||;"+
+"golpear suave|tap~taep|tapped~taept||;"+
+"dar saltitos|hop~jap|hopped~japt||;"+
+"permitir (formal)|permit~permít|permitted~permítid||;"+
+"comprometerse|commit~komít|committed~komítid||1;"+
+"referirse a|refer~rifér|referred~riférd||;"+
+"ocurrir (formal)|occur~okér|occurred~okérd||;"+
+"controlar|control~kontróul|controlled~kontróuld||1;"+
+"lamentar|regret~rigrét|regretted~rigrétid||;"+
+"transferir|transfer~transfér|transferred~transférd||;"+
+"arrastrar|drag~draeg|dragged~draegd||;"+
+"prohibir|ban~baen|banned~baend||"
+,"reg"],
+["R5. Consonante + y → -ied",
+"estudiar|study~stádi|studied~stádid||1;"+
+"intentar|try~trai|tried~traid||1;"+
+"llorar|cry~krai|cried~kraid||1;"+
+"cargar / llevar|carry~káeri|carried~káerid||1;"+
+"copiar|copy~kápi|copied~kápid||;"+
+"preocuparse|worry~uéri|worried~uérid||1;"+
+"casarse|marry~máeri|married~máerid||;"+
+"responder (por escrito)|reply~riplái|replied~ripláid||;"+
+"solicitar / aplicar|apply~aplái|applied~apláid||1;"+
+"apurarse|hurry~jéri|hurried~jérid||;"+
+"secar|dry~drai|dried~draid||;"+
+"freír|fry~frai|fried~fraid||;"+
+"vaciar|empty~émpti|emptied~émptid||;"+
+"satisfacer|satisfy~sáetisfai|satisfied~sáetisfaid||;"+
+"identificar|identify~aidéntifai|identified~aidéntifaid||;"+
+"suministrar|supply~saplái|supplied~sapláid||;"+
+"negar|deny~dinái|denied~dináid||;"+
+"confiar en|rely~rilái|relied~riláid||"
+,"reg"]
 ];
 
-const STORAGE_KEY = "irregular_verbs_v6";
+const STORAGE_KEY = "irregular_verbs_v10";
 
 // Mapa fonético para evitar ambigüedades del sintetizador de voz (TTS)
 const TTS_FIX = {
@@ -356,13 +526,19 @@ const TTS_FIX = {
   "inf:sew": "so",
   "inf:sow": "so",
   "past:resent": "ree-sent",
-  "pp:resent": "ree-sent"
+  "pp:resent": "ree-sent",
+  "inf:live": "liv",
+  "inf:close": "cloze",
+  "inf:use": "yooz",
+  "inf:permit": "purr-mit",
+  "inf:transfer": "trans-fur"
 };
 
 const P = s => { const a = s.split("~"); return { w: a[0], r: a[1] }; };
 
 const fam = F.map(f => ({
   name: f[0],
+  type: f[2] || "irr",
   items: f[1].split(";").filter(Boolean).map(x => {
     const p = x.split("|");
     const past = p[2] || p[1];
@@ -379,24 +555,35 @@ const fam = F.map(f => ({
 
 const $ = id => document.getElementById(id);
 const lvl = $("lvl"), sel = $("fam"), card = $("card"), yes = $("yes"), no = $("no");
-let deck = [], total = 0, fails = 0, flipped = false, busy = false;
+let deck = [], total = 0, fails = 0, flipped = false, busy = false, typ = "irr";
 
 function getFilteredItems(famIndex) {
   const isCore = lvl.value === "core";
-  const base = famIndex === "all" ? fam.flatMap(f => f.items) : fam[+famIndex].items;
+  const vis = fam.filter(f => typ === "all" || f.type === typ);
+  const base = famIndex === "all" ? vis.flatMap(f => f.items) : fam[+famIndex].items;
   return isCore ? base.filter(item => item.core) : base;
 }
 
 function updateCategoryOptions() {
   const prev = sel.value || "all";
+  const vis = fam.map((f, i) => ({ f, i })).filter(o => typ === "all" || o.f.type === typ);
   const totalCount = getFilteredItems("all").length;
   sel.innerHTML = `<option value="all">Todas las categorías (${totalCount} verbos)</option>` +
-    fam.map((f, i) => {
-      const count = getFilteredItems(String(i)).length;
-      return `<option value="${i}">${f.name} (${count})</option>`;
-    }).join("");
-  sel.value = prev;
+    vis.map(o => `<option value="${o.i}">${o.f.name} (${getFilteredItems(String(o.i)).length})</option>`).join("");
+  sel.value = vis.some(o => String(o.i) === prev) ? prev : "all";
 }
+
+function setSeg() {
+  document.querySelectorAll("#seg button").forEach(b => b.classList.toggle("on", b.dataset.t === typ));
+}
+
+document.querySelectorAll("#seg button").forEach(b => b.onclick = () => {
+  typ = b.dataset.t;
+  setSeg();
+  sel.value = "all";
+  updateCategoryOptions();
+  start();
+});
 
 function getTtsWord(word, tense) {
   const key = `${tense}:${word.toLowerCase()}`;
@@ -425,6 +612,7 @@ function saveState() {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify({
       lvl: lvl.value,
+      typ,
       fam: sel.value,
       deck,
       total,
@@ -440,6 +628,8 @@ function loadState() {
     const data = JSON.parse(raw);
     if (!data || !Array.isArray(data.deck)) return false;
     lvl.value = data.lvl || "core";
+    typ = data.typ || "irr";
+    setSeg();
     updateCategoryOptions();
     sel.value = data.fam || "all";
     deck = data.deck;
