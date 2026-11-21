@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Tarjetas de verbos irregulares</title>
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#f6f4ef;--fg:#1f2430;--muted:#667085;--card:#fff;--border:#ddd8cc;--accent:#2f6fed;--ok:#1c8a4d;--bad:#c93c3c;color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#15171c;--fg:#eceef2;--muted:#9aa1ad;--card:#1f232b;--border:#343a46;--accent:#6b9bff;--ok:#2a9d5f;--bad:#d95050;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#15171c;--fg:#eceef2;--muted:#9aa1ad;--card:#1f232b;--border:#343a46;--accent:#6b9bff;--ok:#2a9d5f;--bad:#d95050;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:520px;margin:0 auto;padding:20px 16px 32px}
+h1{font-size:1.5rem;margin:0 0 4px}
+.sub{margin:0 0 16px;color:var(--muted)}
+.bar{display:flex;gap:8px;align-items:center;margin-bottom:12px}
+select{flex:1;min-width:0;padding:10px;border-radius:10px;border:1px solid var(--border);background:var(--card);color:var(--fg);font:inherit}
+button{font:inherit;cursor:pointer}
+.small{padding:10px 14px;border-radius:10px;border:1px solid var(--border);background:var(--card);color:var(--fg)}
+.stats{display:flex;justify-content:space-between;color:var(--muted);font-size:.9rem;margin-bottom:6px}
+.progress{height:8px;border-radius:99px;background:var(--border);overflow:hidden;margin-bottom:18px}
+.progress i{display:block;height:100%;width:0;background:var(--ok);transition:width .3s}
+.card{display:block;perspective:1000px;width:100%;height:270px;background:none;border:0;padding:0;color:inherit}
+.inner{position:relative;display:block;width:100%;height:100%;transition:transform .45s;transform-style:preserve-3d}
+.card.flip .inner{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:16px;text-align:center;border:1px solid var(--border);border-radius:20px;background:var(--card);backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.back{transform:rotateY(180deg)}
+.es{font-size:1.9rem;font-weight:700}
+.hint{color:var(--muted);font-size:.95rem}
+.tap{color:var(--muted);font-size:.85rem;margin-top:10px}
+.row{display:block}
+.row small{display:block;color:var(--muted);font-size:.75rem;text-transform:uppercase;letter-spacing:.05em}
+.row b{font-size:1.5rem;color:var(--accent)}
+.row em{font-style:normal;color:var(--muted);font-size:1.05rem}
+.ref{color:var(--muted);font-size:.9rem}
+.actions{display:flex;gap:10px;margin-top:16px}
+.legend{margin-top:20px;color:var(--muted);font-size:.85rem}
+.actions button{flex:1;padding:14px;border:0;border-radius:12px;color:#fff;font-weight:600}
+.no{background:var(--bad)}.yes{background:var(--ok)}
+.actions button:disabled{opacity:.4;cursor:not-allowed}
+#done{text-align:center;padding:36px 16px;border:1px solid var(--border);border-radius:20px;background:var(--card)}
+#done h2{margin:0 0 8px}
+#done button{margin-top:16px;padding:14px 22px;border:0;border-radius:12px;background:var(--accent);color:#fff;font-weight:600}
+</style>
+</head>
+<body>
+<main>
+<h1>Verbos irregulares</h1>
+<p class="sub">Toca la tarjeta para ver las 3 formas. Si aciertas, sale del mazo; si fallas, vuelve más tarde.</p>
+<div class="bar">
+<select id="fam" aria-label="Familia"></select>
+<button class="small" id="reset">Reiniciar</button>
+</div>
+<div class="stats"><span id="left"></span><span id="fails"></span></div>
+<div class="progress"><i id="pb"></i></div>
+<div id="game">
+<button class="card" id="card" aria-label="Voltear tarjeta">
+<span class="inner">
+<span class="face front"><span class="es" id="es"></span><span class="hint" id="hint"></span><span class="tap">Toca para voltear</span></span>
+<span class="face back">
+<span class="ref" id="ref"></span>
+<span class="row"><small>Infinitivo</small><b id="b1"></b> <em id="r1"></em></span>
+<span class="row"><small>Pasado</small><b id="b2"></b> <em id="r2"></em></span>
+<span class="row"><small>Participio</small><b id="b3"></b> <em id="r3"></em></span>
+</span>
+</span>
+</button>
+<div class="actions">
+<button class="no" id="no" disabled>✗ No acerté</button>
+<button class="yes" id="yes" disabled>✓ Acerté</button>
+</div>
+</div>
+<div id="done" hidden>
+<h2>¡Lo lograste!</h2>
+<p id="msg"></p>
+<button id="again">Volver a empezar</button>
+</div>
+<p class="legend">Cómo leer la pronunciación: <b>j</b> = h aspirada · <b>u</b> = w · <b>th</b> = lengua entre los dientes · <b>ae</b> = a-e rápido · <b>er</b> = e + r suave · ai, ei, ou, au como en español · el acento (´) marca la sílaba fuerte.</p>
+</main>
+<script>
+const F=[
+["Las 3 formas iguales","apostar|bet~bet;pujar|bid~bid;radiar|broadcast~bródcaest;reventar|burst~berst;arrojar|cast~kaest;costar|cost~cost;cortar|cut~cat;golpear|hit~jit;herir|hurt~jert;hacer punto|knit~nit;permitir|let~let;poner|put~put;leer|read~rid|read~red;poner(se)|set~set;cerrar|shut~shat;partir|split~split;extender|spread~spred;sudar|sweat~suet;introducir|thrust~thrast;mojar|wet~uet"],
+["Terminan en -ought / -aught","traer / llevar|bring~bring|brought~brot;comprar|buy~bai|bought~bot;coger|catch~kaech|caught~cot;luchar|fight~fait|fought~fot;buscar|seek~sik|sought~sot;pensar|think~think|thought~thot;enseñar|teach~tich|taught~tot"],
+["Vocal más corta + -t","arrastrarse|creep~crip|crept~crept;tratar|deal~dil|dealt~delt;sentir|feel~fil|felt~felt;conservar|keep~kip|kept~kept;arrodillarse|kneel~nil|knelt~nelt;apoyarse|lean~lin|leant~lent;brincar|leap~lip|leapt~lept;dejar|leave~liv|left~left;significar|mean~min|meant~ment;dormir|sleep~slip|slept~slept;barrer|sweep~suip|swept~suept;llorar|weep~uip|wept~uept"],
+["-nd → -nt","doblar|bend~bend|bent~bent;edificar|build~bild|built~bilt;prestar|lend~lend|lent~lent;enviar|send~send|sent~sent;gastar|spend~spend|spent~spent"],
+["Dos formas: -t o -ed","quemar|burn~bern|burnt / burned~bernt / bernd;soñar|dream~drim|dreamt / dreamed~dremt / drimd;aprender|learn~lern|learnt / learned~lernt / lernd;oler|smell~smel|smelt~smelt;deletrear|spell~spel|spelt~spelt;derramar|spill~spil|spilt / spilled~spilt / spild;estropear|spoil~spoil|spoilt / spoiled~spoilt / spoild"],
+["Terminan en -ound","atar|bind~baind|bound~baund;encontrar|find~faind|found~faund;moler|grind~graind|ground~graund;enrollar|wind~uaind|wound~uaund"],
+["Cambian i por u","agarrarse|cling~cling|clung~clang;cavar|dig~dig|dug~dag;colgar|hang~jaeng|hung~jang;hilar|spin~spin|spun~span;pegar|stick~stik|stuck~stak;picar|sting~sting|stung~stang;golpear|strike~straik|struck~strak;columpiarse|swing~suing|swung~suang;torcer|wring~ring|wrung~rang"],
+["Vocal doble que se acorta","sangrar|bleed~blid|bled~bled;criar|breed~brid|bred~bred;alimentar|feed~fid|fed~fed;huir|flee~fli|fled~fled;conducir|lead~lid|led~led;acelerar|speed~spid|sped~sped"],
+["Terminan en -ld","agarrar / celebrar|hold~jould|held~jeld;vender|sell~sel|sold~sould;decir|tell~tel|told~tould"],
+["Terminan en -aid","poner|lay~lei|laid~leid;pagar|pay~pei|paid~peid;decir|say~sei|said~sed"],
+["Vocal corta nueva","encender|light~lait|lit~lit;encontrar|meet~mit|met~met;disparar|shoot~shut|shot~shot;sentarse|sit~sit|sat~saet;resbalar|slide~slaid|slid~slid;escupir|spit~spit|spat~spaet"],
+["Los demás (pasado = participio)","obtener|get~guet|got~got|got / gotten~got / gotn;tener / haber|have~jaev|had~jaed;oír|hear~jir|heard~jerd;perder|lose~luz|lost~lost;hacer|make~meik|made~meid;brillar|shine~shain|shone~shoun;estar en pie|stand~staend|stood~stud;entender|understand~anderstaénd|understood~anderstúd;ganar|win~uin|won~uan"],
+["Infinitivo = participio","llegar a ser|become~bicám|became~bikéim|become~bicám;venir|come~cam|came~keim|come~cam;vencer|overcome~ouvercám|overcame~ouverkéim|overcome~ouvercám;correr|run~ran|ran~raen|run~ran"],
+["i – a – u","empezar|begin~bigín|began~bigáen|begun~bigán;beber|drink~drink|drank~draenk|drunk~drank;llamar|ring~ring|rang~raeng|rung~rang;encogerse|shrink~shrink|shrank~shraenk|shrunk~shrank;cantar|sing~sing|sang~saeng|sung~sang;hundir|sink~sink|sank~saenk|sunk~sank;saltar|spring~spring|sprang~spraeng|sprung~sprang;apestar|stink~stink|stank / stunk~staenk / stank|stunk~stank;nadar|swim~suim|swam~suaem|swum~suam"],
+["-ew / -own","soplar|blow~blou|blew~blu|blown~bloun;dibujar|draw~dro|drew~dru|drawn~dron;volar|fly~flai|flew~flu|flown~floun;crecer|grow~grou|grew~gru|grown~groun;saber / conocer|know~nou|knew~nu|known~noun;tirar|throw~throu|threw~thru|thrown~throun;retirarse|withdraw~uithdró|withdrew~uithdrú|withdrawn~uithdrón"],
+["Pasado con o, participio en -en","despertarse|awake~auéik|awoke~auóuk|awoken~auóukn;soportar / dar a luz|bear~ber|bore~bor|borne / born~born;romper|break~breik|broke~brouk|broken~broukn;elegir|choose~chuz|chose~chouz|chosen~chouzn;helar|freeze~friz|froze~frouz|frozen~frouzn;esquilar|shear~shir|shore~shor|shorn~shorn;hablar|speak~spik|spoke~spouk|spoken~spoukn;robar|steal~stil|stole~stoul|stolen~stouln;jurar|swear~suer|swore~suor|sworn~suorn;rasgar|tear~ter|tore~tor|torn~torn;despertarse|wake~ueik|woke~uouk|woken~uoukn;llevar puesto|wear~uer|wore~uor|worn~uorn;tejer|weave~uiv|wove~uouv|woven~uouvn"],
+["-ive, -ide, -ise, -ite","surgir|arise~eráiz|arose~eróuz|arisen~erízn;morder|bite~bait|bit~bit|bitten~bitn;conducir|drive~draiv|drove~drouv|driven~drivn;prohibir|forbid~forbíd|forbade~forbáed|forbidden~forbídn;perdonar|forgive~forguív|forgave~forguéiv|forgiven~forguívn;dar|give~guiv|gave~gueiv|given~guivn;ocultar|hide~jaid|hid~jid|hidden~jidn;montar|ride~raid|rode~roud|ridden~ridn;levantarse|rise~raiz|rose~rouz|risen~rizn;dar zancadas|stride~straid|strode~stroud|stridden~stridn;escribir|write~rait|wrote~rout|written~ritn"],
+["-ake → -ook → -aken","equivocar|mistake~mistéik|mistook~mistúk|mistaken~mistéikn;sacudir|shake~sheik|shook~shuk|shaken~sheikn;coger / tomar|take~teik|took~tuk|taken~teikn;emprender|undertake~andertéik|undertook~andertúk|undertaken~andertéikn"],
+["Otros con participio -en","golpear|beat~bit|beat~bit|beaten~bitn;comer|eat~it|ate~eit|eaten~itn;caer|fall~fol|fell~fel|fallen~folen;olvidar|forget~forguét|forgot~forgót|forgotten~forgótn;pisar|tread~tred|trod~trod|trodden~trodn"],
+["Pasado regular, participio con -n","coser|sew~sou|sewed~soud|sewed / sewn~soud / soun;mostrar|show~shou|showed~shoud|shown~shoun;sembrar|sow~sou|sowed~soud|sowed / sown~soud / soun;hinchar|swell~suel|swelled~sueld|swollen~suólen"],
+["Los sueltos más importantes","ser / estar|be~bi|was / were~uaz / uer|been~bin;hacer|do~du|did~did|done~dan;ir|go~gou|went~uent|gone~gon;echarse|lie~lai|lay~lei|lain~lein;ver|see~si|saw~so|seen~sin;sufrir|undergo~andergóu|underwent~anderuént|undergone~andergón"]
+];
+const P=s=>{const a=s.split("~");return{w:a[0],r:a[1]}};
+const fam=F.map(f=>({name:f[0],items:f[1].split(";").map(x=>{const p=x.split("|"),past=p[2]||p[1];return{es:p[0],inf:P(p[1]),past:P(past),pp:P(p[3]||past)}})}));
+const $=id=>document.getElementById(id);
+const sel=$("fam"),card=$("card"),yes=$("yes"),no=$("no");
+let deck=[],total=0,fails=0,flipped=false,busy=false;
+const n=fam.reduce((s,f)=>s+f.items.length,0);
+sel.innerHTML='<option value="all">Todas ('+n+' verbos)</option>'+fam.map((f,i)=>'<option value="'+i+'">'+(i+1)+'. '+f.name+' ('+f.items.length+')</option>').join("");
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function stats(){$("left").textContent="Quedan "+deck.length+" de "+total;$("fails").textContent="Fallos: "+fails;$("pb").style.width=(total?(total-deck.length)/total*100:0)+"%"}
+function start(){const v=sel.value,src=v==="all"?fam.flatMap(f=>f.items):fam[+v].items;deck=shuffle(src.slice());total=deck.length;fails=0;busy=false;$("done").hidden=true;$("game").hidden=false;show()}
+function show(){stats();if(!deck.length){$("game").hidden=true;$("done").hidden=false;$("msg").textContent="Acertaste las "+total+" tarjetas con "+fails+(fails===1?" fallo.":" fallos.");return}
+const c=deck[0];$("es").textContent=c.es;$("hint").textContent="Empieza con «"+c.inf.w[0]+"»";$("ref").textContent=c.es;["inf","past","pp"].forEach((k,i)=>{$("b"+(i+1)).textContent=c[k].w;$("r"+(i+1)).textContent="/"+c[k].r+"/"});card.classList.remove("flip");flipped=false;yes.disabled=no.disabled=true}
+function flip(){if(busy||!deck.length)return;flipped=!flipped;card.classList.toggle("flip",flipped);yes.disabled=no.disabled=!flipped}
+function mark(ok){if(!flipped||busy)return;busy=true;if(ok)deck.shift();else{fails++;deck.push(deck.shift())}card.classList.remove("flip");flipped=false;yes.disabled=no.disabled=true;stats();setTimeout(()=>{busy=false;show()},320)}
+card.onclick=flip;yes.onclick=()=>mark(true);no.onclick=()=>mark(false);
+$("reset").onclick=start;$("again").onclick=start;sel.onchange=start;
+document.addEventListener("keydown",e=>{if(e.key==="ArrowRight")mark(true);else if(e.key==="ArrowLeft")mark(false)});
+start();
+</script>
+</body>
+</html>
